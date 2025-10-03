@@ -1,7 +1,7 @@
 // Reasoning: Connection pool with mysql2/promise for prepared statements and efficient DB access
-const mysql = require('mysql2/promise');
-const config = require('./index');
-const logger = require('./logger');
+const mysql = require("mysql2/promise");
+const config = require("./index");
+const logger = require("./logger");
 
 const pool = mysql.createPool({
   host: config.DB.host,
@@ -15,6 +15,6 @@ const pool = mysql.createPool({
   namedPlaceholders: false,
 });
 
-pool.on('connection', () => logger.debug('MySQL: New connection established'));
+pool.on("connection", () => logger.debug("MySQL: New connection established"));
 
 module.exports = pool;

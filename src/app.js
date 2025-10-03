@@ -1,15 +1,15 @@
 // Reasoning: App initialization with security middleware, logging, rate limiting, routes, and error handling
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const config = require('./config');
-const logger = require('./config/logger');
-const errorHandler = require('./middleware/errorHandler');
-const { generalLimiter } = require('./middleware/rateLimiter');
-const routes = require('./routes');
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const config = require("./config");
+const logger = require("./config/logger");
+const errorHandler = require("./middleware/errorHandler");
+const { generalLimiter } = require("./middleware/rateLimiter");
+const routes = require("./routes");
 
 const app = express();
 
@@ -26,25 +26,30 @@ app.use(helmet());
 app.use(cors({ origin: true, credentials: true }));
 
 // Body parsers with sensible limits
-app.use(express.json({ limit: '2mb' }));
-app.use(express.urlencoded({ extended: true, limit: '2mb' }));
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
 // Logging
-app.use(morgan('combined', { stream: { write: (msg) => logger.info(msg.trim()) } }));
+app.use(
+  morgan("combined", { stream: { write: (msg) => logger.info(msg.trim()) } }),
+);
 
 // Rate limiting (general)
 app.use(generalLimiter);
 
 // Static files
-app.use('/uploads', express.static(uploadDir));
-app.use('/invoices', express.static(invoiceDir));
+app.use("/uploads", express.static(uploadDir));
+app.use("/invoices", express.static(invoiceDir));
 
 // Routes
-app.use('/api/v1', routes);
+app.use("/api/v1", routes);
 
 // 404 handler
 app.use((req, res, next) => {
-  res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Route not found' } });
+  res.status(404).json({
+    success: false,
+    error: { code: "NOT_FOUND", message: "Route not found" },
+  });
 });
 
 // Error handler

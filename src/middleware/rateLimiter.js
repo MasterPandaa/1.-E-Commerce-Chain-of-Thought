@@ -1,6 +1,6 @@
 // Reasoning: Rate limiting to prevent brute force and abuse
-const rateLimit = require('express-rate-limit');
-const config = require('../config');
+const rateLimit = require("express-rate-limit");
+const config = require("../config");
 
 const generalLimiter = rateLimit({
   windowMs: config.RATE_LIMIT.windowMs,
@@ -9,7 +9,10 @@ const generalLimiter = rateLimit({
   legacyHeaders: false,
   message: {
     success: false,
-    error: { code: 'RATE_LIMITED', message: 'Too many requests, please try again later.' },
+    error: {
+      code: "RATE_LIMITED",
+      message: "Too many requests, please try again later.",
+    },
   },
 });
 

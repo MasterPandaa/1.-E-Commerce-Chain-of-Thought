@@ -3,6 +3,7 @@
 A production-ready, secure E-Commerce REST API with JWT authentication, product management with image upload, cart, checkout (simulated payment), PDF invoice generation, email notifications, and an admin dashboard.
 
 ## Architecture Overview
+
 - MVC + Service layer
   - Routes -> Controllers -> Services -> Models
   - Config: database pool, logger, mailer, env parsing
@@ -30,6 +31,7 @@ A production-ready, secure E-Commerce REST API with JWT authentication, product 
 Server will run on `http://localhost:3000` by default.
 
 ## Directory Structure
+
 ```
 src/
   app.js
@@ -61,6 +63,7 @@ db/
 ```
 
 ## API Surface (high-level)
+
 - Auth: register, login, logout, request password reset, reset password
 - Products: admin CRUD, browse with filters/pagination/search, upload images
 - Cart: add/update/remove items, compute totals, persist cart
@@ -74,6 +77,7 @@ Detailed route documentation will be expanded as features are implemented.
 Base URL: `http://localhost:${PORT}/api/v1`
 
 Auth
+
 - POST `/auth/register` — body: `{ name, email, password }`
 - POST `/auth/login` — body: `{ email, password }` → `{ token, user }`
 - POST `/auth/logout` — header: `Authorization: Bearer <token>`
@@ -81,6 +85,7 @@ Auth
 - POST `/auth/reset-password` — body: `{ token, newPassword }`
 
 Products
+
 - GET `/products` — query: `page, limit, category_id, min_price, max_price, q`
 - GET `/products/:id`
 - POST `/products` — admin only — body: `{ name, description?, price_cents, currency?, stock, category_id? }`
@@ -89,17 +94,20 @@ Products
 - POST `/products/:id/images` — admin only — multipart field: `image`
 
 Cart
+
 - GET `/cart` — auth required
 - POST `/cart/items` — body: `{ product_id, quantity }`
 - PATCH `/cart/items/:product_id` — body: `{ quantity }` (0 to remove)
 - DELETE `/cart/items/:product_id`
 
 Orders
+
 - POST `/orders/checkout` — auth required — body: shipping fields (`shipping_name`, `shipping_phone`, `shipping_address_line1`, `shipping_address_line2?`, `shipping_city`, `shipping_state`, `shipping_postal_code`, `shipping_country`)
 - GET `/orders` — list my orders
 - GET `/orders/:id` — get my order
 
 Admin
+
 - GET `/admin/stats` — admin only
 - GET `/admin/orders` — query: `page, limit, status?` — admin only
 - PATCH `/admin/orders/:id/status` — body: `{ status }` — admin only
@@ -109,6 +117,7 @@ Admin
 ## Quick Test (cURL)
 
 1. Register user
+
 ```
 curl -X POST http://localhost:3000/api/v1/auth/register \
   -H 'Content-Type: application/json' \
@@ -116,6 +125,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ```
 
 2. Login and capture token
+
 ```
 TOKEN=$(curl -s -X POST http://localhost:3000/api/v1/auth/login \
   -H 'Content-Type: application/json' \
@@ -123,11 +133,13 @@ TOKEN=$(curl -s -X POST http://localhost:3000/api/v1/auth/login \
 ```
 
 3. List products
+
 ```
 curl http://localhost:3000/api/v1/products
 ```
 
 4. Admin create product (requires admin token)
+
 ```
 curl -X POST http://localhost:3000/api/v1/products \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
@@ -136,6 +148,7 @@ curl -X POST http://localhost:3000/api/v1/products \
 ```
 
 5. Add to cart
+
 ```
 curl -X POST http://localhost:3000/api/v1/cart/items \
   -H "Authorization: Bearer $TOKEN" \
@@ -144,6 +157,7 @@ curl -X POST http://localhost:3000/api/v1/cart/items \
 ```
 
 6. Checkout
+
 ```
 curl -X POST http://localhost:3000/api/v1/orders/checkout \
   -H "Authorization: Bearer $TOKEN" \
@@ -160,6 +174,7 @@ curl -X POST http://localhost:3000/api/v1/orders/checkout \
 ```
 
 ## Security Considerations
+
 - Use strong `JWT_SECRET` and rotate periodically
 - Store only hashed password (bcrypt), never plaintext
 - Always validate inputs and sanitize user-provided content
@@ -169,4 +184,5 @@ curl -X POST http://localhost:3000/api/v1/orders/checkout \
 - Do not commit real credentials; use environment variables
 
 ## License
+
 MIT
